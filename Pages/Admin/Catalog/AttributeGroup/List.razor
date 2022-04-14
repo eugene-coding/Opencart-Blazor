@@ -1,0 +1,76 @@
+﻿@inject NavigationManager Navigation
+
+<div class="content">
+    <div class="container-fluid">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td class="text-center">
+                        <input type="checkbox" />
+                    </td>
+
+                    <td class="text-left">Название</td>
+                    <td class="text-right">Порядок сортировки</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_attributeGroups is not null)
+                {
+                    @if (_attributeGroups.Count > 0)
+                    {
+                        @foreach (Data.AttributeGroup attributeGroup in _attributeGroups)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" />
+                                </td>
+
+                                <td class="text-left">@attributeGroup.AttributeGroupDescriptions.Name</td>
+                                <td class="text-right">@attributeGroup.SortOrder</td>
+                                <td class="text-right">
+                                    @{
+                                        Uri formUri = new Uri(new Uri(Navigation.BaseUri), Form.Url);
+                                        UriBuilder baseUri = new UriBuilder(formUri);
+
+                                        var queryToAppend = $"id={attributeGroup.Id}";
+
+                                        if (baseUri.Query != null && baseUri.Query.Length > 1)
+                                            baseUri.Query = "&" + queryToAppend;
+                                        else
+                                        {
+                                            baseUri.Query = queryToAppend;
+                                        }
+                                    }
+                                    <a href="@baseUri">Перейти</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">Empty</td>
+                        </tr>
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">Loading...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@if (Page is not null)
+{
+    <div>
+        <span>Query Page: </span>
+        <span>@Page</span>
+    </div>
+}
